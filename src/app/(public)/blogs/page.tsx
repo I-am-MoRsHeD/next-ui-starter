@@ -1,6 +1,12 @@
-import BlogCard from "@/components/modules/Blogs/BlogCard";
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import BlogCard from "@/components/modules/Blogs/BlogCard";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: 'Blog page',
+  description: 'Nothing just showing all the blog cards here'
+}
+
 const AllBlogsPage = async () => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/post`, {
     cache: 'no-store'
