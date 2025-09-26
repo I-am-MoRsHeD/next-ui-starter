@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import BlogDetailsCard from '@/components/modules/Blogs/BlogDetailsCard';
+import { getBlogById } from '@/services/PostServices';
 import React from 'react';
 
 interface IProps {
@@ -23,8 +24,7 @@ export const generateStaticParams = async () => {
 
 export const generateMetadata = async ({ params }: IProps) => {
     const { blogId } = await params;
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/post/${blogId}`);
-    const blog = await res.json();
+    const blog = await getBlogById(blogId);
 
     return {
         title: blog?.title,
@@ -34,9 +34,7 @@ export const generateMetadata = async ({ params }: IProps) => {
 
 const BlogDetailsPage = async ({ params }: IProps) => {
     const { blogId } = await params;
-
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/post/${blogId}`);
-    const blog = await res.json();
+    const blog = await getBlogById(blogId);
 
     return (
         <div className='py-30 px-4 max-w-7xl mx-auto'>
