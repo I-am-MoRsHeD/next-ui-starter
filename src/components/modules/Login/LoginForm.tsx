@@ -5,6 +5,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useForm, type FieldValues, type SubmitHandler } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import Image from 'next/image';
+import { signIn } from 'next-auth/react';
 
 const LoginForm = () => {
     const form = useForm();
@@ -14,7 +15,9 @@ const LoginForm = () => {
     };
 
     const handleSocialLogin = (provider: "google" | "github") => {
-        console.log(`Login with ${provider}`);
+        signIn("google", {
+            callbackUrl: '/dashboard'
+        });
     };
 
     return (
