@@ -6,13 +6,16 @@ import { useForm } from "react-hook-form";
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod'; import Link from "next/link";
 import Password from "@/components/ui/Password";
+import { register } from "@/actions/auth";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const registerSchema = z.object({
     name: z.string().min(3, {
         error: "Name must be at least 3 characters long"
     }).max(50),
     email: z.email(),
-    phoneNumber: z
+    phone: z
         .string({ error: "Phone Number must be string" })
         .regex(/^(?:\+8801\d{9}|01\d{9})$/, {
             message: "Phone number must be valid for Bangladesh. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
@@ -32,18 +35,28 @@ const registerSchema = z.object({
 });
 
 const RegisterForm = () => {
+    const router = useRouter();
     const form = useForm<z.infer<typeof registerSchema>>({
         resolver: zodResolver(registerSchema),
         defaultValues: {
             name: "",
             email: "",
-            phoneNumber: "",
+            phone: "",
             password: ""
         }
     });
 
     const onSubmit = async (data: z.infer<typeof registerSchema>) => {
-        console.log(data);
+        const toastId = toast.loading('Please wait....');
+        try {
+            const res = await register(data);
+            if (res?.id) {
+                toast.success('User registration successfully!', { id: toastId });
+                router.push('/login');
+            }
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     return (
@@ -92,10 +105,10 @@ const RegisterForm = () => {
                                 </FormItem>
                             )}
                         />
-                        {/* phoneNumber */}
+                        {/* phone */}
                         <FormField
                             control={form.control}
-                            name="phoneNumber"
+                            name="phone"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Phone Number</FormLabel>

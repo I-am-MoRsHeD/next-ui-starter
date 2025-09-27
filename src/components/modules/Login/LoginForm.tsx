@@ -6,12 +6,26 @@ import { useForm, type FieldValues, type SubmitHandler } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import Image from 'next/image';
 import { signIn } from 'next-auth/react';
+import { toast } from 'sonner';
 
 const LoginForm = () => {
     const form = useForm();
 
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-        console.log(data);
+        const toastId = toast.loading('Please wait....');
+        try {
+            // const res = await login(data);
+            // if (res?.id) {
+            //     toast.success('User logged in successfully!', { id: toastId });
+            //     router.push('/');
+            // }
+            signIn('credentials', {
+                ...data,
+                callbackUrl: '/dashboard'
+            })
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     const handleSocialLogin = (provider: "google" | "github") => {
